@@ -7,145 +7,188 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Setup Screen -->
-    <div id="setup-screen" class="hidden">
-        <div class="mb-4">
-            <h1>Welcome to VoiceMail Pro! 🎤</h1>
-            <p class="subtitle">Transform voice into professional emails</p>
-        </div>
-
-        <div>
-            <div class="info-box info-box-blue">
-                <h2>How it works:</h2>
-                <ol>
-                    <li>Get a free OpenRouter API key (2 min)</li>
-                    <li>Paste it here once</li>
-                    <li>Start converting voice to emails</li>
-                </ol>
+    <div class="container">
+        <!-- Setup / Welcome Screen -->
+        <div id="setup-screen" class="hidden">
+            <div class="mb-4">
+                <h1>⚡ VoiceMail Pro</h1>
+                <p class="subtitle">Transform voice into polished emails instantly</p>
             </div>
 
-            <div class="info-box info-box-green">
-                <h3>✅ Free & BYOK</h3>
-                <p>OpenRouter offers a free tier and supports many models.</p>
-            </div>
-
-            <div class="setup-step">
-                <h3>Step 1: Get API Key</h3>
-                <button id="open-openrouter" class="btn-primary">
-                    Open OpenRouter →
-                </button>
-                <div class="instructions-box mt-2">
-                    <p>Once opened:</p>
-                    <ol>
-                        <li>Sign up or log in</li>
-                        <li>Go to <b>API Keys</b></li>
-                        <li>Click <b>+ Create Key</b></li>
-                        <li>Copy your key (starts with <code>sk-or</code>)</li>
-                    </ol>
+            <div class="glass-panel">
+                <div class="setup-step">
+                    <label for="setup-provider-select" style="font-size: 11px; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 6px;">
+                        1. Select AI Provider
+                    </label>
+                    <select id="setup-provider-select">
+                        <option value="gemini">Google Gemini (Recommended / Free)</option>
+                        <option value="openrouter">OpenRouter (Multi-model / Free options)</option>
+                        <option value="openai">OpenAI (Direct API)</option>
+                        <option value="anthropic">Anthropic Claude (Direct API)</option>
+                    </select>
                 </div>
-            </div>
 
-            <div class="setup-step">
-                <h3>Step 2: Paste API Key</h3>
-                <input
-                    type="password"
-                    id="api-key-input"
-                    placeholder="sk-or..."
-                />
+                <!-- Instructions Box (Dynamically updated in popup.js) -->
+                <div id="setup-instructions" class="instructions-box mb-3">
+                    <!-- Loaded dynamically -->
+                </div>
+
+                <div class="setup-step">
+                    <label for="setup-api-key-input" style="font-size: 11px; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 6px;">
+                        2. Enter API Key
+                    </label>
+                    <input
+                        type="password"
+                        id="setup-api-key-input"
+                        placeholder="Paste your API key here..."
+                    />
+                </div>
+
+                <div class="setup-step">
+                    <label for="setup-model-select" style="font-size: 11px; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 6px;">
+                        3. Preferred Model
+                    </label>
+                    <select id="setup-model-select">
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+
                 <div id="setup-error" class="hidden mt-2"></div>
-                <button id="save-key" class="btn-success mt-2">
-                    Save & Start Using
+
+                <button id="setup-save-btn" class="btn-success mt-3">
+                    Save & Get Started 🚀
                 </button>
             </div>
 
             <div class="privacy-notice">
-                🔒 Your OpenRouter API key is stored locally. We never see it.
+                🔒 Private & Local: API keys stay in your browser storage.
             </div>
         </div>
-    </div>
 
-    <!-- Main Extension Screen -->
-    <div id="main-screen" class="hidden">
-        <div class="header">
-            <h1>🎤 VoiceMail Pro</h1>
-            <button id="settings-btn" class="settings-btn" title="Settings">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3"/>
-                </svg>
-            </button>
-        </div>
-
-        <!-- Tone Selector -->
-        <div class="tone-selector">
-            <label>Email Tone:</label>
-            <select id="tone-select">
-                <option value="professional">Professional</option>
-                <option value="friendly">Friendly</option>
-                <option value="formal">Formal</option>
-                <option value="casual">Casual</option>
-            </select>
-        </div>
-
-        <!-- Record Button -->
-        <button id="record-btn">
-            <div class="button-content">
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
-                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                    <line x1="12" x2="12" y1="19" y2="22"/>
-                </svg>
-                <span>Click to Record</span>
+        <!-- Main Extension Screen -->
+        <div id="main-screen" class="hidden">
+            <div class="header">
+                <h1>🎤 VoiceMail Pro</h1>
+                <button id="settings-btn" class="settings-btn" title="API & Model Settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m12.72-12.72l-1.41 1.41"/>
+                    </svg>
+                </button>
             </div>
-        </button>
 
-        <!-- Transcript -->
-        <div id="transcript-container" class="hidden">
-            <label>You said:</label>
-            <div id="transcript"></div>
-        </div>
+            <!-- Settings Panel (Collapsible) -->
+            <div id="settings-panel" class="hidden">
+                <div class="settings-group">
+                    <label>Provider</label>
+                    <select id="settings-provider-select">
+                        <option value="gemini">Google Gemini</option>
+                        <option value="openrouter">OpenRouter</option>
+                        <option value="openai">OpenAI</option>
+                        <option value="anthropic">Anthropic Claude</option>
+                    </select>
+                </div>
 
-        <!-- Generated Email -->
-        <div id="email-container" class="hidden">
-            <label>Professional Email:</label>
-            <div id="email-output"></div>
-        </div>
+                <div class="settings-group">
+                    <label>API Key</label>
+                    <input type="password" id="settings-api-key-input" placeholder="Enter key..." />
+                </div>
 
-        <!-- Loading State -->
-        <div id="loading" class="hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" x2="12" y1="2" y2="6"/>
-                <line x1="12" x2="12" y1="18" y2="22"/>
-                <line x1="4.93" x2="7.76" y1="4.93" y2="7.76"/>
-                <line x1="16.24" x2="19.07" y1="16.24" y2="19.07"/>
-                <line x1="2" x2="6" y1="12" y2="12"/>
-                <line x1="18" x2="22" y1="12" y2="12"/>
-                <line x1="4.93" x2="7.76" y1="19.07" y2="16.24"/>
-                <line x1="16.24" x2="19.07" y1="7.76" y2="4.93"/>
-            </svg>
-            <span>Generating email...</span>
-        </div>
+                <div class="settings-group">
+                    <label>Model</label>
+                    <select id="settings-model-select">
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
 
-        <!-- Error Message -->
-        <div id="error-msg" class="hidden"></div>
+                <div id="settings-error" class="hidden"></div>
 
-        <!-- Action Buttons -->
-        <div id="action-buttons" class="hidden">
-            <button id="copy-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
-                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
-                </svg>
-                <span>Copy</span>
+                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                    <button id="settings-save-btn" class="btn-success" style="flex: 1; padding: 7px 10px; font-size: 12px;">Save Settings</button>
+                    <button id="settings-reset-btn" class="btn-primary" style="flex: 1; padding: 7px 10px; font-size: 12px; background: #475569;">Reset All Keys</button>
+                </div>
+            </div>
+
+            <!-- Selector Grid -->
+            <div class="control-grid">
+                <div class="control-item">
+                    <label for="tone-select">Email Tone</label>
+                    <select id="tone-select">
+                        <option value="professional">Professional</option>
+                        <option value="friendly">Friendly</option>
+                        <option value="formal">Formal</option>
+                        <option value="casual">Casual</option>
+                    </select>
+                </div>
+                <div class="control-item">
+                    <label for="active-provider-select">AI Provider</label>
+                    <select id="active-provider-select">
+                        <option value="gemini">Gemini</option>
+                        <option value="openrouter">OpenRouter</option>
+                        <option value="openai">OpenAI</option>
+                        <option value="anthropic">Anthropic</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Record Button -->
+            <button id="record-btn">
+                <div class="button-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                        <line x1="12" x2="12" y1="19" y2="22"/>
+                    </svg>
+                    <span>Click to Record</span>
+                </div>
             </button>
-            <button id="paste-btn">Paste</button>
-            <button id="clear-btn">Clear</button>
-        </div>
 
-        <!-- Usage Stats -->
-        <div class="usage-stats">
-            <p>💡 Free: 250 emails/day</p>
-            <p>🔒 Data never leaves your browser</p>
+            <!-- Loading State -->
+            <div id="loading" class="hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" x2="12" y1="2" y2="6"/>
+                    <line x1="12" x2="12" y1="18" y2="22"/>
+                    <line x1="4.93" x2="7.76" y1="4.93" y2="7.76"/>
+                    <line x1="16.24" x2="19.07" y1="16.24" y2="19.07"/>
+                    <line x1="2" x2="6" y1="12" y2="12"/>
+                    <line x1="18" x2="22" y1="12" y2="12"/>
+                </svg>
+                <span id="loading-text">Generating email...</span>
+            </div>
+
+            <!-- Error Message -->
+            <div id="error-msg" class="hidden"></div>
+
+            <!-- Transcript -->
+            <div id="transcript-container" class="output-section hidden">
+                <label>You Said:</label>
+                <div id="transcript"></div>
+            </div>
+
+            <!-- Generated Email -->
+            <div id="email-container" class="output-section hidden">
+                <label>Generated Email:</label>
+                <div id="email-output"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div id="action-buttons" class="hidden">
+                <button id="copy-btn" class="action-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                    </svg>
+                    <span>Copy</span>
+                </button>
+                <button id="paste-btn" class="action-btn">Paste</button>
+                <button id="clear-btn" class="action-btn">Clear</button>
+            </div>
+
+            <!-- Footer / Stats -->
+            <div class="usage-stats">
+                <p>🔒 Input processing is private & secure</p>
+                <p id="active-model-display" style="font-size: 10px; opacity: 0.7; margin-top: 4px;"></p>
+            </div>
         </div>
     </div>
 
