@@ -43,10 +43,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       const apiKey = apiKeys[provider];
       
       const defaultModels = {
-        gemini: 'gemini-1.5-flash',
+        gemini: 'gemini-3.5-flash-lite',
         openai: 'gpt-4o-mini',
         anthropic: 'claude-3-5-sonnet-20240620',
-        openrouter: 'google/gemini-flash-1.5'
+        openrouter: 'openrouter/auto'
       };
       
       const model = models[provider] || defaultModels[provider];

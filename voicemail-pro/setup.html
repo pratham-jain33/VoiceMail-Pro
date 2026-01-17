@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceMail Pro - Setup</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-main);
+        }
+
+        .onboarding-page-container {
+            width: 100%;
+            max-width: 480px;
+            min-height: 560px;
+            margin: 20px auto;
+            position: relative;
+            background: var(--card-bg);
+            border: var(--border-width) solid var(--border-color);
+            border-radius: var(--radius-main);
+            box-shadow: var(--shadow-hard);
+            overflow: hidden;
+        }
+
+        #setup-screen {
+            min-height: 560px;
+        }
+
+        .onboarding-viewport {
+            min-height: 560px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="onboarding-page-container">
+        <!-- Onboarding Wizard Screen -->
+        <div id="setup-screen">
+            <!-- Global Progress Bar with Tick System (for setup steps 1..5) -->
+            <div id="onboarding-progress-bar" class="wizard-progress-container hidden">
+                <div class="progress-track-bg"></div>
+                <div id="progress-track-fill" class="progress-track-fill" style="width: 0%;"></div>
+
+                <div class="ticks-wrapper">
+                    <!-- Tick 1 (Name) -->
+                    <div id="tick-1" class="tick-node">
+                        <svg class="tick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <!-- Tick 2 (BYOK Info) -->
+                    <div id="tick-2" class="tick-node">
+                        <svg class="tick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <!-- Tick 3 (AI Provider) -->
+                    <div id="tick-3" class="tick-node">
+                        <svg class="tick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <!-- Tick 4 (API Key) -->
+                    <div id="tick-4" class="tick-node">
+                        <svg class="tick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <!-- Tick 5 (Speech Recognition) -->
+                    <div id="tick-5" class="tick-node">
+                        <svg class="tick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <!-- Tick 6 (Technical Checks) -->
+                    <div id="tick-6" class="tick-node">
+                        <svg class="tick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="onboarding-viewport">
+
+                <!-- Step 0: Welcome / Splash -->
+                <div id="onboarding-step-0" class="onboarding-slide active-slide">
+                    <div class="splash-content">
+                        <img id="splash-logo" class="splash-logo-img" src="icons/icon-96.png"
+                            alt="VoiceMail Pro Logo" />
+                        <h1 id="splash-title" class="splash-title hidden-fade">VoiceMail Pro</h1>
+                        <button id="splash-start-btn" class="brutal-btn splash-btn hidden-fade">
+                            <span>Start Emailing Faster</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 1: User Name Input -->
+                <div id="onboarding-step-1" class="onboarding-slide slide-right">
+                    <div class="step-card step-card-compact">
+                        <div class="step-title-row">
+                            <img class="step-title-icon" src="icons/identification-card.png" alt="Name Icon" />
+                            <label for="user-name-input" class="step-label">Name</label>
+                        </div>
+                        <input type="text" id="user-name-input" class="brutal-input" placeholder="e.g. Pratham Jain" />
+                        <p class="step-subtext">Used in your email signatures.<br><span>This can be changed
+                                later</span>.</p>
+
+                        <div class="btn-align-center mt-4">
+                            <button id="step-1-next-btn" class="brutal-btn">
+                                <span>Continue</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: BYOK (Bring Your Own Key) Info Screen -->
+                <div id="onboarding-step-2" class="onboarding-slide slide-right">
+                    <div class="step-card">
+                        <div class="step-header-actions">
+                            <button id="step-2-back-btn" class="back-btn" title="Go back">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                                    <polyline points="12 19 5 12 12 5"></polyline>
+                                </svg>
+                                <span>Back</span>
+                            </button>
+                        </div>
+
+                        <div class="step-title-row">
+                            <img class="step-title-icon" src="icons/info.png" alt="Info Icon" />
+                            <h2 class="byok-heading">Bring Your Own Key</h2>
+                        </div>
+
+                        <div class="byok-info-box">
+                            <p>VoiceMail Pro operates on a <b>Bring Your Own Key (BYOK)</b> architecture.</p>
+                            <p class="mt-2 flex-align-center">
+                                <img src="icons/lock-simple.png" class="inline-icon" alt="Lock Icon" />
+                                <span><b>100% Private:</b> No API keys are stored on the cloud. All keys remain safely
+                                    stored strictly inside your browser's local storage.</span>
+                            </p>
+                        </div>
+
+                        <div class="btn-align-center mt-4">
+                            <button id="step-2-next-btn" class="brutal-btn">
+                                <span>Got It, Continue</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Custom Dropdown AI Provider Select -->
+                <div id="onboarding-step-3" class="onboarding-slide slide-right">
+                    <div class="step-card">
+                        <div class="step-header-actions">
+                            <button id="step-3-back-btn" class="back-btn" title="Go back">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                                    <polyline points="12 19 5 12 12 5"></polyline>
+                                </svg>
+                                <span>Back</span>
+                            </button>
+                        </div>
+
+                        <div class="step-title-row">
+                            <img class="step-title-icon" src="icons/plugs.png" alt="Plugs Icon" />
+                            <label class="step-label">Select AI Provider</label>
+                        </div>
+
+                        <!-- Custom Themed Brutalist Dropdown -->
+                        <div class="custom-dropdown" id="custom-provider-dropdown">
+                            <div class="dropdown-selected" id="dropdown-selected-val">
+                                <span class="provider-name">Google Gemini (Free)</span>
+                                <svg class="dropdown-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m6 9 6 6 6-6" />
+                                </svg>
+                            </div>
+                            <div class="dropdown-options hidden" id="dropdown-options-menu">
+                                <div class="dropdown-option selected" data-value="gemini">Google Gemini (Free)</div>
+                                <div class="dropdown-option" data-value="openrouter">OpenRouter (Free options)</div>
+                                <div class="dropdown-option" data-value="openai">OpenAI (Direct API)</div>
+                                <div class="dropdown-option" data-value="anthropic">Anthropic Claude (Direct API)</div>
+                            </div>
+                        </div>
+                        <select id="setup-provider-select" class="hidden">
+                            <option value="gemini">Google Gemini</option>
+                            <option value="openrouter">OpenRouter</option>
+                            <option value="openai">OpenAI</option>
+                            <option value="anthropic">Anthropic</option>
+                        </select>
+
+                        <p class="step-subtext mt-2">Choose which AI engine powers your voice
+                            transcription.<br><span>This can be changed later</span>.</p>
+
+                        <div class="btn-align-center mt-4">
+                            <button id="step-3-next-btn" class="brutal-btn">
+                                <span>Continue Setup</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Enter API Key -->
+                <div id="onboarding-step-4" class="onboarding-slide slide-right">
+                    <div class="step-card">
+                        <div class="step-header-actions">
+                            <button id="step-4-back-btn" class="back-btn" title="Go back">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                                    <polyline points="12 19 5 12 12 5"></polyline>
+                                </svg>
+                                <span>Back</span>
+                            </button>
+                        </div>
+
+                        <div class="step-title-row">
+                            <img class="step-title-icon" src="icons/key.png" alt="Key Icon" />
+                            <label for="setup-api-key-input" class="step-label">Enter API Key</label>
+                        </div>
+
+                        <!-- Provider specific hint/instructions -->
+                        <div id="setup-instructions" class="instructions-box mb-2"></div>
+
+                        <input type="password" id="setup-api-key-input" class="brutal-input"
+                            placeholder="Paste your API key..." />
+
+                        <!-- Hidden select for model compatibility -->
+                        <select id="setup-model-select" class="hidden"></select>
+
+                        <div id="setup-error" class="hidden mt-2"></div>
+
+                        <p class="step-subtext mt-2">
+                            <span>This can be changed later</span>.<br>
+                            This key is <b>NOT</b> saved on the cloud.
+                        </p>
+
+                        <div class="btn-align-center mt-3">
+                            <button id="step-4-next-btn" class="brutal-btn">
+                                <span>Continue to Speech Setup</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Speech Recognition Setup -->
+                <div id="onboarding-step-5" class="onboarding-slide slide-right">
+                    <div class="step-card">
+                        <div class="step-header-actions">
+                            <button id="step-5-back-btn" class="back-btn" title="Go back">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                                    <polyline points="12 19 5 12 12 5"></polyline>
+                                </svg>
+                                <span>Back</span>
+                            </button>
+                        </div>
+
+                        <div class="step-title-row">
+                            <img class="step-title-icon" src="icons/plugs.png" alt="Mic Setup Icon" />
+                            <label class="step-label">Speech Recognition Engine</label>
+                        </div>
+
+                        <p class="step-subtext" style="margin-top: 0; margin-bottom: 12px;">
+                            Choose how your voice is converted to text:
+                        </p>
+
+                        <!-- STT Provider Options -->
+                        <div class="stt-choice-container">
+                            <label class="stt-card-option selected" id="stt-opt-webspeech-card">
+                                <input type="radio" name="setup-stt-provider" value="webspeech" checked />
+                                <div class="stt-option-details">
+                                    <div class="stt-opt-title"><img src="icons/globe.png" class="stt-icon-img" alt="Globe Icon" /> Browser Web Speech API</div>
+                                    <div class="stt-opt-desc">Built-in browser recognition. 100% Free, zero setup.</div>
+                                </div>
+                            </label>
+
+                            <label class="stt-card-option" id="stt-opt-groq-card">
+                                <input type="radio" name="setup-stt-provider" value="groq" />
+                                <div class="stt-option-details">
+                                    <div class="stt-opt-title"><img src="icons/star.png" class="stt-icon-img" alt="Star Icon" /> Groq Whisper (Recommended)</div>
+                                    <div class="stt-opt-desc">Ultra-accurate speech recognition. Free API, no credit card.</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Groq API Key Setup Box (Shown when Groq selected) -->
+                        <div id="setup-groq-key-card" class="hidden mt-2">
+                            <div class="instructions-box mb-2">
+                                <p><b>How to get your free Groq API Key:</b></p>
+                                <ol>
+                                    <li>Go to <a href="https://console.groq.com/keys" target="_blank" style="color: #1d4ed8; font-weight: 800;">Groq Console API Keys</a></li>
+                                    <li>Sign up or Log in with Google/Email (<b>100% Free</b>, no credit card required)</li>
+                                    <li>Click <b>+ Create API Key</b> and copy key</li>
+                                    <li>Paste key below (starts with <code>gsk_</code>)</li>
+                                </ol>
+                            </div>
+                            <input type="password" id="setup-groq-key-input" class="brutal-input"
+                                placeholder="Paste Groq key (gsk_...)" />
+                        </div>
+
+                        <div id="setup-stt-error" class="hidden mt-2"></div>
+
+                        <div class="btn-align-center mt-3">
+                            <button id="step-5-next-btn" class="brutal-btn btn-success-brutal">
+                                <span>Proceed To Verification</span>
+                                <img src="icons/check.png" class="btn-icon" alt="Check Icon" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6: Technical Checks -->
+                <div id="onboarding-step-6" class="onboarding-slide slide-right">
+                    <div class="step-card step-card-scrollable">
+                        <div class="step-header-actions">
+                            <button id="step-6-back-btn" class="back-btn" title="Go back">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                                    <polyline points="12 19 5 12 12 5"></polyline>
+                                </svg>
+                                <span>Back</span>
+                            </button>
+                        </div>
+
+                        <label class="step-label">Technical Checks</label>
+                        <p class="step-subtext" style="margin-top: 0; margin-bottom: 12px;">Verifying hardware
+                            permissions, AI services, and STT configuration...</p>
+
+                        <!-- Check List Container -->
+                        <div class="tech-checks-list">
+                            <!-- Mic check item -->
+                            <div id="check-item-mic" class="tech-check-item">
+                                <div class="check-icon-status status-pending">
+                                    <span class="spinner-sm"></span>
+                                </div>
+                                <div class="check-info">
+                                    <span class="check-title">Microphone Access & Hardware</span>
+                                    <span class="check-desc" id="mic-status-desc">Checking browser permissions...</span>
+                                </div>
+                                <button id="mic-retry-btn" class="retry-action-btn hidden">Grant Access</button>
+                            </div>
+
+                            <!-- API Test 1: Authentication & Provider Reachability -->
+                            <div id="check-item-api2" class="tech-check-item">
+                                <div class="check-icon-status status-pending">
+                                    <span class="spinner-sm"></span>
+                                </div>
+                                <div class="check-info">
+                                    <span class="check-title">1. Provider Authentication Test</span>
+                                    <span class="check-desc" id="api2-status-desc">Authenticating with AI
+                                        provider...</span>
+                                </div>
+                            </div>
+
+                            <!-- API Test 2: Model Pipeline Test -->
+                            <div id="check-item-api3" class="tech-check-item">
+                                <div class="check-icon-status status-pending">
+                                    <span class="spinner-sm"></span>
+                                </div>
+                                <div class="check-info">
+                                    <span class="check-title">2. Model Execution & Generation Test</span>
+                                    <span class="check-desc" id="api3-status-desc">Running quick prompt test...</span>
+                                </div>
+                            </div>
+
+                            <!-- STT Engine Test -->
+                            <div id="check-item-stt" class="tech-check-item">
+                                <div class="check-icon-status status-pending">
+                                    <span class="spinner-sm"></span>
+                                </div>
+                                <div class="check-info">
+                                    <span class="check-title">3. Speech Recognition Verification</span>
+                                    <span class="check-desc" id="stt-status-desc">Verifying STT configuration...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fallback controls (shown if API key or provider check fails) -->
+                        <div id="tech-check-fallback" class="tech-fallback-box hidden mt-3">
+                            <p class="fallback-warning flex-align-center">
+                                <img src="icons/warning.png" class="inline-icon" alt="Warning Icon" />
+                                <span>Diagnostic failed. Update details to retry:</span>
+                            </p>
+
+                            <div class="fallback-field-group">
+                                <label class="fallback-label">Provider</label>
+                                <div class="custom-dropdown" id="fallback-provider-custom-dropdown">
+                                    <div class="dropdown-selected" id="fallback-provider-dropdown-selected">
+                                        <span class="provider-name">Google Gemini (Free)</span>
+                                        <svg class="dropdown-chevron" xmlns="http://www.w3.org/2000/svg" width="14"
+                                            height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </div>
+                                    <div class="dropdown-options hidden" id="fallback-provider-dropdown-options">
+                                        <div class="dropdown-option selected" data-value="gemini">Google Gemini (Free)
+                                        </div>
+                                        <div class="dropdown-option" data-value="openrouter">OpenRouter (Free options)
+                                        </div>
+                                        <div class="dropdown-option" data-value="openai">OpenAI (Direct API)</div>
+                                        <div class="dropdown-option" data-value="anthropic">Anthropic Claude (Direct
+                                            API)</div>
+                                    </div>
+                                </div>
+                                <select id="fallback-provider-select" class="hidden">
+                                    <option value="gemini">Google Gemini (Free)</option>
+                                    <option value="openrouter">OpenRouter (Free options)</option>
+                                    <option value="openai">OpenAI (Direct API)</option>
+                                    <option value="anthropic">Anthropic Claude (Direct API)</option>
+                                </select>
+                            </div>
+
+                            <div class="fallback-field-group mt-2">
+                                <label class="fallback-label">Update AI Provider API Key</label>
+                                <input type="password" id="fallback-api-key-input" class="brutal-input"
+                                    placeholder="Enter valid AI API key..." />
+                            </div>
+
+                            <div class="fallback-field-group mt-2" id="fallback-groq-group">
+                                <label class="fallback-label">Update Groq STT Key</label>
+                                <input type="password" id="fallback-groq-key-input" class="brutal-input"
+                                    placeholder="Enter valid Groq key (gsk_...)..." />
+                            </div>
+
+                            <div class="btn-align-center mt-3">
+                                <button id="fallback-retry-btn" class="brutal-btn">
+                                    <span>Re-run Technical Checks</span>
+                                    <img src="icons/reset.png" class="btn-icon" alt="Reset Icon" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Final Launch Button -->
+                        <button id="onboarding-finish-btn" class="brutal-btn btn-success-brutal mt-4 hidden">
+                            <span>Finish & Launch</span>
+                            <span class="btn-logo-inline">
+                                <img src="icons/icon-96.png" class="btn-logo-img" alt="VoiceMail Pro Logo" />
+                                <span>VoiceMail Pro</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Brutalist Setup Complete Success Modal Overlay -->
+    <div id="setup-complete-modal" class="custom-modal-overlay hidden">
+        <div class="custom-modal-card">
+            <div class="modal-header-row">
+                <img src="icons/icon-96.png" class="inline-icon" alt="VoiceMail Pro Logo"
+                    style="width: 24px; height: 24px;" />
+                <h3 class="modal-title">Setup Complete!</h3>
+            </div>
+            <p class="modal-body-text">VoiceMail Pro is configured and ready. You can now use voice dictation from any
+                web page or via the extension icon.</p>
+            <div class="modal-btn-row">
+                <button id="modal-close-setup-btn" class="brutal-btn btn-success-brutal">Let's Go!</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="setup.js"></script>
+</body>
+
+</html>
