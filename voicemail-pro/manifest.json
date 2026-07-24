@@ -8,7 +8,7 @@
     ],
   "manifest_version": 3,
   "name": "VoiceMail Pro",
-  "version": "1.0.0",
+  "version": "3.5",
   "description": "Convert your voice to professional emails instantly. Speak casually, get perfectly formatted emails.",
   "permissions": [
     "storage",
@@ -25,7 +25,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["permission.html", "request-permission.js", "setup.html", "setup.js"],
+      "resources": ["request-permission.js", "setup.html", "setup.js"],
       "matches": ["<all_urls>"]
     }
   ],

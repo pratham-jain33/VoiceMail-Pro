@@ -1649,3 +1649,17 @@ button.action-btn:hover {
         width: 320px;
     }
 }
+
+/* Input Error Validation Highlighting */
+.input-error-highlight {
+    border-color: #ef4444 !important;
+    background-color: rgba(239, 68, 68, 0.12) !important;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5) !important;
+    animation: inputShake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes inputShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-4px); }
+    40%, 80% { transform: translateX(4px); }
+}
