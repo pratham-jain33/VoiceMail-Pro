@@ -205,6 +205,8 @@ function setupEventListeners() {
             if (groqKeyGroup) groqKeyGroup.classList.toggle('hidden', sttProv !== 'groq');
             const groqKeyInput = document.getElementById('settings-groq-key-input');
             if (groqKeyInput) groqKeyInput.value = state.groqSttKey || '';
+
+            clearErrorHighlights();
         }
     });
 
@@ -364,6 +366,23 @@ async function validateApiKey(provider, key, model) {
     }
 }
 
+function clearErrorHighlights() {
+    document.querySelectorAll('.input-error-highlight').forEach(el => {
+        el.classList.remove('input-error-highlight');
+    });
+}
+
+function highlightErrorInput(inputElement, errorElement, message) {
+    clearErrorHighlights();
+    if (inputElement) {
+        inputElement.classList.add('input-error-highlight');
+        inputElement.focus();
+    }
+    if (errorElement) {
+        showValidationFeedback(errorElement, message);
+    }
+}
+
 // Saves API configuration from either Setup or Settings Panel
 async function saveApiKeyAndModel(screen) {
     const isSetup = (screen === 'setup');
@@ -375,27 +394,51 @@ async function saveApiKeyAndModel(screen) {
     const errorEl = document.getElementById(isSetup ? 'setup-error' : 'settings-error');
     const saveBtn = document.getElementById(isSetup ? 'setup-save-btn' : 'settings-save-btn');
 
+    clearErrorHighlights();
+
     if (!key) {
-        showValidationFeedback(errorEl, 'Please enter an API key.');
+        highlightErrorInput(keyInput, errorEl, `Please enter an API key for ${provider.toUpperCase()}.`);
         return;
     }
 
     // Strict API key format & length check
     if (provider === 'gemini' && key.length < 20) {
-        showValidationFeedback(errorEl, 'Invalid Gemini key format: key is too short (min 20 characters).');
+        highlightErrorInput(keyInput, errorEl, 'Invalid Gemini key format: key is too short (min 20 characters).');
         return;
     }
     if (provider === 'openrouter' && (!key.startsWith('sk-or-') || key.length < 25)) {
-        showValidationFeedback(errorEl, 'Invalid OpenRouter key format: must start with "sk-or-".');
+        highlightErrorInput(keyInput, errorEl, 'Invalid OpenRouter key format: must start with "sk-or-".');
         return;
     }
     if (provider === 'openai' && (!key.startsWith('sk-') || key.length < 25)) {
-        showValidationFeedback(errorEl, 'Invalid OpenAI key format: must start with "sk-".');
+        highlightErrorInput(keyInput, errorEl, 'Invalid OpenAI key format: must start with "sk-".');
         return;
     }
     if (provider === 'anthropic' && (!key.startsWith('sk-ant-') || key.length < 25)) {
-        showValidationFeedback(errorEl, 'Invalid Anthropic key format: must start with "sk-ant-".');
+        highlightErrorInput(keyInput, errorEl, 'Invalid Anthropic key format: must start with "sk-ant-".');
         return;
+    }
+
+    // Validate Groq STT settings if in Popup Settings and Groq is selected
+    let selectedStt = state.sttProvider;
+    let groqKeyVal = state.groqSttKey;
+    if (!isSetup) {
+        const sttSelect = document.getElementById('settings-stt-select');
+        if (sttSelect) selectedStt = sttSelect.value;
+
+        if (selectedStt === 'groq') {
+            const groqKeyEl = document.getElementById('settings-groq-key-input');
+            groqKeyVal = groqKeyEl ? groqKeyEl.value.trim() : '';
+
+            if (!groqKeyVal) {
+                highlightErrorInput(groqKeyEl, errorEl, 'Please enter a Groq API key for Groq Speech Recognition.');
+                return;
+            }
+            if (!groqKeyVal.startsWith('gsk_') || groqKeyVal.length < 20) {
+                highlightErrorInput(groqKeyEl, errorEl, 'Invalid Groq key format: must start with "gsk_".');
+                return;
+            }
+        }
     }
 
     try {
@@ -403,9 +446,35 @@ async function saveApiKeyAndModel(screen) {
         saveBtn.textContent = 'Validating key...';
         errorEl.classList.add('hidden');
 
-        await validateApiKey(provider, key, model);
+        // Test main AI provider API key
+        try {
+            await validateApiKey(provider, key, model);
+        } catch (apiErr) {
+            highlightErrorInput(keyInput, errorEl, apiErr.message || 'LLM API key validation failed.');
+            saveBtn.disabled = false;
+            saveBtn.textContent = isSetup ? 'Save & Start' : 'Save Settings';
+            return;
+        }
 
-        // Update state and save
+        // Test Groq API key if Groq Speech Recognition is selected
+        if (!isSetup && selectedStt === 'groq') {
+            try {
+                const groqResp = await fetch('https://api.groq.com/openai/v1/models', {
+                    headers: { 'Authorization': `Bearer ${groqKeyVal}` }
+                });
+                if (!groqResp.ok) {
+                    throw new Error('Groq API key is invalid or unauthorized.');
+                }
+            } catch (groqErr) {
+                const groqKeyEl = document.getElementById('settings-groq-key-input');
+                highlightErrorInput(groqKeyEl, errorEl, 'Groq API key validation failed. Please check your key at console.groq.com.');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Settings';
+                return;
+            }
+        }
+
+        // All validations passed! Save settings
         state.apiKeys[provider] = key;
         state.models[provider] = model;
         state.activeProvider = provider;
@@ -415,15 +484,8 @@ async function saveApiKeyAndModel(screen) {
             if (nameVal) {
                 state.userName = nameVal;
             }
-            // Save STT provider settings
-            const sttSelect = document.getElementById('settings-stt-select');
-            if (sttSelect) {
-                state.sttProvider = sttSelect.value;
-            }
-            const groqKeyEl = document.getElementById('settings-groq-key-input');
-            if (groqKeyEl && groqKeyEl.value.trim()) {
-                state.groqSttKey = groqKeyEl.value.trim();
-            }
+            state.sttProvider = selectedStt;
+            state.groqSttKey = groqKeyVal;
         }
 
         chrome.storage.local.set({
@@ -437,7 +499,8 @@ async function saveApiKeyAndModel(screen) {
             saveBtn.disabled = false;
             saveBtn.textContent = isSetup ? 'Save & Start' : 'Save Settings';
 
-            // Clean fields
+            // Clean fields & highlights
+            clearErrorHighlights();
             keyInput.value = '';
 
             if (isSetup) {
@@ -452,7 +515,7 @@ async function saveApiKeyAndModel(screen) {
     } catch (err) {
         saveBtn.disabled = false;
         saveBtn.textContent = isSetup ? 'Save & Start' : 'Save Settings';
-        showValidationFeedback(errorEl, err.message || 'Connection failed during validation.');
+        highlightErrorInput(keyInput, errorEl, err.message || 'Connection failed during validation.');
     }
 }
 
@@ -461,26 +524,19 @@ function showValidationFeedback(element, msg) {
     element.classList.remove('hidden');
 }
 
-// Request microphone access using permission.html fallback
+// Request microphone access directly
 async function checkMicPermission() {
     if (isRecording) {
         stopRecording();
         return;
     }
 
-    if (!navigator.permissions) {
-        startRecording();
-        return;
-    }
     try {
-        const permission = await navigator.permissions.query({ name: 'microphone' });
-        if (permission.state !== 'granted') {
-            chrome.tabs.create({ url: chrome.runtime.getURL('permission.html') });
-        } else {
-            startRecording();
-        }
-    } catch (e) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach(track => track.stop());
         startRecording();
+    } catch (err) {
+        showError('Microphone access denied. Please allow microphone permission in browser settings.');
     }
 }
 

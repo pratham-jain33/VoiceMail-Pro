@@ -1,5 +1,53 @@
 // background.js
 
+// Function to calculate metadata and set Chrome's uninstall URL
+async function updateUninstallURL() {
+  try {
+    const data = await chrome.storage.local.get([
+      'uninstallSurveyEnabled',
+      'uninstallSurveyUrl',
+      'activeProvider',
+      'installDate'
+    ]);
+
+    // Ensure installDate is recorded
+    let installDate = data.installDate;
+    if (!installDate) {
+      installDate = Date.now();
+      await chrome.storage.local.set({ installDate });
+    }
+
+    const isEnabled = data.uninstallSurveyEnabled !== false; // Default enabled
+    if (!isEnabled) {
+      await chrome.runtime.setUninstallURL('');
+      console.log('VoiceMail Pro: Uninstall survey disabled.');
+      return;
+    }
+
+    // Default survey URL if not explicitly set
+    let baseUrl = data.uninstallSurveyUrl || 'https://tally.so/r/ODeKka';
+    
+    // Calculate days used
+    const daysUsed = Math.max(0, Math.floor((Date.now() - installDate) / (1000 * 60 * 60 * 24)));
+    const version = chrome.runtime.getManifest().version;
+    const provider = data.activeProvider || 'gemini';
+
+    // Construct URL with metadata query parameters
+    const urlObj = new URL(baseUrl);
+    urlObj.searchParams.set('version', version);
+    urlObj.searchParams.set('provider', provider);
+    urlObj.searchParams.set('browser', 'Chrome');
+    urlObj.searchParams.set('daysUsed', daysUsed.toString());
+    urlObj.searchParams.set('installDate', new Date(installDate).toISOString());
+
+    const finalUrl = urlObj.toString();
+    await chrome.runtime.setUninstallURL(finalUrl);
+    console.log('VoiceMail Pro: Uninstall URL registered successfully:', finalUrl);
+  } catch (err) {
+    console.error('VoiceMail Pro: Failed to set uninstall URL:', err);
+  }
+}
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: 'voicemail-pro-root',
@@ -20,6 +68,21 @@ chrome.runtime.onInstalled.addListener(() => {
       contexts: ['editable']
     });
   });
+
+  // Initialize Uninstall URL
+  updateUninstallURL();
+});
+
+// Update uninstall URL on service worker startup
+chrome.runtime.onStartup.addListener(() => {
+  updateUninstallURL();
+});
+
+// Update uninstall URL whenever relevant storage properties change
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && (changes.uninstallSurveyEnabled || changes.uninstallSurveyUrl || changes.activeProvider)) {
+    updateUninstallURL();
+  }
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
@@ -33,6 +96,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 // Listen for transcript, call the active API provider, and send formatted text back
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.action === 'voicemail_pro_update_uninstall_url') {
+    updateUninstallURL().then(() => sendResponse({ success: true }));
+    return true;
+  }
+
   if (msg.action === 'voicemail_pro_transcript') {
     // Get settings from local storage
     chrome.storage.local.get(['activeProvider', 'apiKeys', 'models'], async (result) => {
