@@ -1663,3 +1663,14 @@ button.action-btn:hover {
     20%, 60% { transform: translateX(-4px); }
     40%, 80% { transform: translateX(4px); }
 }
+
+/* Dark Mode Logo Switch */
+@media (prefers-color-scheme: dark) {
+    .splash-logo-img,
+    .header-logo-img,
+    .btn-logo-img,
+    .logo-img,
+    img[src*="icon-96.png"] {
+        content: url("icons/dark_mode_logo.png");
+    }
+}

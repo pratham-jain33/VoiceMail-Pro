@@ -78,8 +78,20 @@ let state = {
     groqSttKey: ''
 };
 
+function updateLogoForDarkMode() {
+    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const logos = document.querySelectorAll('.splash-logo-img, .header-logo-img, .btn-logo-img, img[src*="icon-96.png"]');
+    logos.forEach(logo => {
+        logo.src = isDarkMode ? 'icons/dark_mode_logo.png' : 'icons/icon-96.png';
+    });
+}
+if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateLogoForDarkMode);
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
+    updateLogoForDarkMode();
     // Load config from local storage
     chrome.storage.local.get(['activeProvider', 'apiKeys', 'models', 'userName', 'sttProvider', 'groqSttKey'], (result) => {
         state.activeProvider = result.activeProvider || 'gemini';

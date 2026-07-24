@@ -68,7 +68,19 @@ const instructionsHTML = {
     `
 };
 
+function updateLogoForDarkMode() {
+    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const logos = document.querySelectorAll('.splash-logo-img, .header-logo-img, .btn-logo-img, img[src*="icon-96.png"]');
+    logos.forEach(logo => {
+        logo.src = isDarkMode ? 'icons/dark_mode_logo.png' : 'icons/icon-96.png';
+    });
+}
+if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateLogoForDarkMode);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    updateLogoForDarkMode();
     // Load local storage
     chrome.storage.local.get(['activeProvider', 'apiKeys', 'models', 'userName', 'sttProvider', 'groqSttKey'], (result) => {
         state.activeProvider = result.activeProvider || 'gemini';
@@ -123,7 +135,7 @@ function updateInstructions() {
 
 function initOnboardingWizard() {
     currentStepIndex = 0;
-    
+
     const progressBar = document.getElementById('onboarding-progress-bar');
     if (progressBar) progressBar.classList.add('hidden');
 
@@ -352,7 +364,7 @@ function setupWizardListeners() {
             const newKey = document.getElementById('fallback-api-key-input').value.trim();
             const newProvider = document.getElementById('fallback-provider-select').value;
             const newGroqKey = document.getElementById('fallback-groq-key-input').value.trim();
-            
+
             if (newKey) {
                 state.apiKeys[newProvider] = newKey;
                 state.activeProvider = newProvider;
