@@ -18,6 +18,7 @@
     --accent-green: #bbf7d0;
     --accent-purple: #e9d5ff;
     --accent-orange: #fed7aa;
+    --accent-red: #fca5a5;
 
     --border-color: #121212;
     --border-width: 2.5px;
@@ -26,6 +27,7 @@
     --shadow-hard-hover: 6px 6px 0px #121212;
 
     --radius-main: 12px;
+    --radius-md: 9px;
     --radius-sm: 6px;
     --transition-fast: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -135,20 +137,6 @@ h3,
     justify-content: center;
     text-align: center;
     width: 100%;
-}
-
-/* Global Progress Bar with Tick System */
-.wizard-progress-container {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 82%;
-    height: 30px;
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* Global Progress Bar with Tick System */
@@ -647,6 +635,9 @@ h3,
 
 .brutal-input {
     width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+    display: block;
     padding: 10px 14px;
     border: var(--border-width) solid var(--border-color);
     border-radius: var(--radius-sm);
@@ -690,8 +681,8 @@ h3,
 .custom-dropdown {
     position: relative;
     width: 100%;
-    margin-top: 4px;
-    margin-bottom: 4px;
+    max-width: 320px;
+    margin: 0 auto;
 }
 
 .dropdown-selected {
@@ -839,22 +830,6 @@ h3,
     display: inline-flex;
     align-items: center;
     gap: 6px;
-}
-
-/* Constrain input box widths so they don't stretch excessively */
-.brutal-input {
-    width: 100%;
-    max-width: 320px;
-    margin: 0 auto;
-    display: block;
-    box-sizing: border-box;
-}
-
-.custom-dropdown {
-    position: relative;
-    width: 100%;
-    max-width: 320px;
-    margin: 0 auto;
 }
 
 .btn-icon {
@@ -1458,7 +1433,7 @@ button.action-btn:hover {
 
 .author-text:hover {
     color: var(--text-primary);
-    background: var(--bg-card);
+    background: var(--card-bg);
 }
 
 .author-socials-popover {
@@ -1640,7 +1615,7 @@ button.action-btn:hover {
 
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--text-secondary);
 }
 
 /* Responsive adjustments */
@@ -1672,5 +1647,35 @@ button.action-btn:hover {
     .logo-img,
     img[src*="icon-96.png"] {
         content: url("icons/dark_mode_logo.png");
+    }
+}
+/* Keyboard focus visibility (mouse users keep the clean brutalist look) */
+.brutal-btn:focus-visible,
+.settings-btn:focus-visible,
+.back-btn:focus-visible,
+.icon-reset-btn:focus-visible,
+.retry-action-btn:focus-visible,
+button.action-btn:focus-visible,
+.dropdown-selected:focus-visible,
+#record-btn:focus-visible {
+    outline: 3px solid var(--accent-blue);
+    outline-offset: 2px;
+}
+
+/* Respect users who prefer reduced motion: calm the decorative animation */
+@media (prefers-reduced-motion: reduce) {
+    .onboarding-slide,
+    .tick-node,
+    .tick-node .tick-icon {
+        transition: none;
+    }
+
+    #record-btn.recording,
+    .splash-btn.visible,
+    .dropdown-options,
+    #settings-panel,
+    .custom-modal-card,
+    .input-error-highlight {
+        animation: none;
     }
 }
