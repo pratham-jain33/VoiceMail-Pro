@@ -6,6 +6,12 @@ VoiceMail Pro - AI Voice Email Writer is a lightweight, privacy-focused Chrome E
 
 ---
 
+## Why I built this
+
+Writing a proper email from a rough thought takes longer than the thought itself. You dictate or type fragments, then rewrite the same sentence five times to get the tone right. VoiceMail Pro exists to skip that loop: speak the messy version, get a clean, structured email back, and approve it before anything is inserted. It is bring-your-own-key on purpose, so there is no middleman server, no subscription, and nothing between you and the AI provider you already use.
+
+---
+
 ## Key Features
 
 - **Instant Speech-to-Email**: Turn rough, unedited voice notes into clean, well-structured emails in seconds.
@@ -38,6 +44,15 @@ flowchart TD
     E -->|OpenRouter| F[LLM Tone Formatting]
     F --> G[Direct Insertion to Active Text Input]
 ```
+
+---
+
+## Tech stack
+
+- **Chrome Extension, Manifest V3**: background service worker, content script, and popup/setup pages in plain JavaScript. No build step.
+- **Speech to text**: Web Speech API, or Groq Whisper if you prefer.
+- **AI providers (BYOK)**: Google Gemini, OpenAI, Anthropic, and OpenRouter, called directly from the browser with your own API key.
+- **Storage**: `chrome.storage.local` only. Keys, transcripts, and settings never leave the browser except to the provider you picked.
 
 ---
 
